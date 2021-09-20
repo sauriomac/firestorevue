@@ -1,30 +1,30 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <Navbar />
+  <div class="container">
+    <Cargando v-if="loading" />
+    <router-view />
   </div>
-  <router-view/>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Navbar from "@/components/Navbar.vue";
+import Cargando from  "@//components/Cargando.vue"
+import {firebase} from "@/firebase"
+import { ref, onMounted } from "vue"
+export default {
+  components: { Navbar, Cargando },
+  setup() {
 
-#nav {
-  padding: 30px;
-}
+    const loading = ref(false)
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+    onMounted(async() => {
+      loading.value = true
+      await firebase.getCurrentUser()
+      loading.value = false
+    })
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+    return {loading}
+
+  },
+};
+</script>
